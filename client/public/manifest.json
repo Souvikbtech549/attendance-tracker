@@ -1,0 +1,10 @@
+{
+  "name": "Attendly Student Attendance Tracker",
+  "short_name": "Attendly",
+  "description": "Track subject-wise attendance, warnings, recovery classes, and safe bunk count.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f8fafc",
+  "theme_color": "#2563eb",
+  "icons": []
+}

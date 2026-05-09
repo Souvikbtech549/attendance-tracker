@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Student Attendance Tracker</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <section class="auth-shell" id="authShell">
+    <div class="auth-copy">
+      <p class="eyebrow">Attendance OS</p>
+      <h1>Track every class with a private student account.</h1>
+      <p>
+        Sign in to save subjects, update daily attendance, and keep your minimum criteria separated from other students.
+      </p>
+      <div class="auth-metrics">
+        <div>
+          <strong>75%</strong>
+          <span>Default criteria</span>
+        </div>
+        <div>
+          <strong>7d</strong>
+          <span>Login session</span>
+        </div>
+        <div>
+          <strong>PBKDF2</strong>
+          <span>Password hashing</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="auth-card">
+      <div class="auth-tabs" role="tablist" aria-label="Authentication mode">
+        <button
+          class="auth-tab active"
+          id="loginTab"
+          type="button"
+          role="tab"
+          aria-selected="true"
+          aria-controls="authForm"
+        >Login</button>
+        <button
+          class="auth-tab"
+          id="registerTab"
+          type="button"
+          role="tab"
+          aria-selected="false"
+          aria-controls="authForm"
+          tabindex="-1"
+        >Register</button>
+      </div>
+
+      <form id="authForm" class="auth-form" role="tabpanel" aria-labelledby="loginTab">
+        <label id="nameField" class="hidden">
+          Full name
+          <input id="authName" type="text" placeholder="Aarav Sharma" autocomplete="name" />
+        </label>
+
+        <label>
+          Email address
+          <input id="authEmail" type="email" placeholder="student@example.com" autocomplete="email" required />
+        </label>
+
+        <label>
+          Password
+          <input id="authPassword" type="password" placeholder="Minimum 6 characters" autocomplete="current-password" required />
+        </label>
+
+        <button class="primary-btn auth-submit" id="authSubmit" type="submit">Login</button>
+        <p class="form-error" id="authError" role="alert"></p>
+      </form>
+    </div>
+  </section>
+
+  <main class="app hidden" id="appShell">
+    <section class="topbar">
+      <div>
+        <p class="eyebrow">Student Dashboard</p>
+        <h1>Attendance Tracker</h1>
+        <p class="signed-in">Signed in as <strong id="currentUserName"></strong></p>
+      </div>
+      <div class="top-actions">
+        <button class="ghost-btn" id="clearAllBtn" type="button">Clear All</button>
+        <button class="secondary-btn" id="logoutBtn" type="button">Logout</button>
+      </div>
+    </section>
+
+    <section class="summary-grid" aria-label="Attendance summary">
+      <article class="summary-item">
+        <span>Total Subjects</span>
+        <strong id="subjectCount">0</strong>
+      </article>
+      <article class="summary-item">
+        <span>Total Classes</span>
+        <strong id="totalClasses">0</strong>
+      </article>
+      <article class="summary-item">
+        <span>Attended</span>
+        <strong id="totalAttended">0</strong>
+      </article>
+      <article class="summary-item">
+        <span>Overall</span>
+        <strong id="overallPercent">0%</strong>
+      </article>
+    </section>
+
+    <section class="panel">
+      <h2>Add Subject</h2>
+      <form id="subjectForm" class="subject-form">
+        <label>
+          Subject name
+          <input id="subjectName" type="text" placeholder="Mathematics" required />
+        </label>
+
+        <label>
+          Total classes
+          <input id="heldClasses" type="number" min="0" value="0" required />
+        </label>
+
+        <label>
+          Classes attended
+          <input id="attendedClasses" type="number" min="0" value="0" required />
+        </label>
+
+        <label>
+          Minimum criteria %
+          <input id="minimumPercent" type="number" min="1" max="100" value="75" required />
+        </label>
+
+        <button class="primary-btn" type="submit">Add Subject</button>
+      </form>
+      <p class="form-error" id="formError" role="alert"></p>
+    </section>
+
+    <section class="subjects-header">
+      <h2>Your Subjects</h2>
+      <p>Update every class with Attended or Missed.</p>
+    </section>
+
+    <section class="subjects" id="subjectsList" aria-live="polite"></section>
+  </main>
+
+  <template id="subjectTemplate">
+    <article class="subject-card">
+      <div class="subject-main">
+        <div>
+          <h3 class="subject-title"></h3>
+          <p class="subject-meta"></p>
+        </div>
+        <span class="status-pill"></span>
+      </div>
+
+      <div class="progress-track">
+        <div class="progress-bar"></div>
+      </div>
+
+      <div class="stats">
+        <div>
+          <span>Attendance</span>
+          <strong class="percentage"></strong>
+        </div>
+        <div>
+          <span>Need</span>
+          <strong class="need-count"></strong>
+        </div>
+        <div>
+          <span>Can Miss</span>
+          <strong class="miss-count"></strong>
+        </div>
+      </div>
+
+      <div class="card-actions">
+        <button class="attend-btn" type="button">Attended</button>
+        <button class="miss-btn" type="button">Missed</button>
+        <button class="delete-btn" type="button" aria-label="Delete subject">Delete</button>
+      </div>
+    </article>
+  </template>
+
+  <script src="script.js"></script>
+</body>
+</html>
