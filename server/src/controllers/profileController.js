@@ -1,17 +1,26 @@
+const { pool } = require("../config/database");
 const { publicUser } = require("./authController");
 const { asyncHandler } = require("../utils/asyncHandler");
+const { mapUser } = require("../utils/sqlMappers");
 
 const updateProfile = asyncHandler(async (req, res) => {
-  const allowed = ["name", "defaultMinimumCriteria", "notificationSettings"];
+  const result = await pool.query(
+    `UPDATE users
+     SET name = $1,
+         default_minimum_criteria = $2,
+         notification_settings = $3,
+         updated_at = NOW()
+     WHERE id = $4
+     RETURNING *`,
+    [
+      req.body.name ?? req.user.name,
+      req.body.defaultMinimumCriteria ?? req.user.defaultMinimumCriteria,
+      JSON.stringify(req.body.notificationSettings ?? req.user.notificationSettings),
+      req.user.id,
+    ]
+  );
 
-  for (const key of allowed) {
-    if (req.body[key] !== undefined) {
-      req.user[key] = req.body[key];
-    }
-  }
-
-  await req.user.save();
-  res.json({ user: publicUser(req.user) });
+  res.json({ user: publicUser(mapUser(result.rows[0])) });
 });
 
 module.exports = { updateProfile };

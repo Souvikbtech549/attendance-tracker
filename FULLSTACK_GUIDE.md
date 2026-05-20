@@ -4,11 +4,11 @@ Attendly is a student attendance platform with:
 
 - React + Tailwind + Framer Motion frontend
 - Recharts analytics
-- Express + MongoDB backend
+- Express + PostgreSQL backend
 - JWT authentication
 - Semester-wise subject storage
 - Everyday class timetable
-- Attendance formulas stored in MongoDB
+- Attendance formulas calculated by the backend
 - CSV and PDF exports
 - PWA shell support
 
@@ -16,7 +16,7 @@ Attendly is a student attendance platform with:
 
 ```txt
 client/          React frontend
-server/          Express + MongoDB backend
+server/          Express + PostgreSQL backend
 src/             Legacy no-dependency prototype backend
 data/            Legacy JSON storage
 ```
@@ -29,7 +29,7 @@ Install dependencies:
 
 ```cmd
 cd /d "C:\Users\sigma\Documents\Codex\2026-05-02\i-want-to-create-an-attendence"
-npm run install:all
+npm.cmd run install:all
 ```
 
 Create backend environment file:
@@ -41,7 +41,7 @@ copy server\.env.example server\.env
 Edit `server\.env` and set:
 
 ```txt
-MONGODB_URI=mongodb://127.0.0.1:27017/attendance_tracker
+DATABASE_URL=postgresql://username:password@host:5432/attendance_tracker?sslmode=require
 JWT_SECRET=your_long_secret
 CLIENT_URL=http://localhost:5173
 ```
@@ -50,14 +50,14 @@ Run backend:
 
 ```cmd
 cd server
-npm run dev
+npm.cmd run dev
 ```
 
 Run frontend in a second terminal:
 
 ```cmd
 cd client
-npm run dev
+npm.cmd run dev
 ```
 
 Open:
@@ -77,11 +77,10 @@ Backend:
 
 - Deploy `server/` to Render or Railway.
 - Add environment variables from `server/.env.example`.
-- Use MongoDB Atlas for `MONGODB_URI`.
+- Use Supabase or Neon Postgres for `DATABASE_URL`.
 
 Database:
 
-- Create a MongoDB Atlas cluster.
-- Add your backend host to network access.
-- Create a database user.
-- Put the connection string in `MONGODB_URI`.
+- Create a free Postgres database on Supabase or Neon.
+- Copy the pooled/connection string.
+- Put the connection string in `DATABASE_URL`.

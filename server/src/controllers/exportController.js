@@ -1,26 +1,38 @@
 const PDFDocument = require("pdfkit");
 const { stringify } = require("csv-stringify/sync");
-const { Subject } = require("../models/Subject");
+const { pool } = require("../config/database");
 const { asyncHandler } = require("../utils/asyncHandler");
+const { mapSubject } = require("../utils/sqlMappers");
 
 async function getExportRows(userId) {
-  const subjects = await Subject.find({ user: userId }).sort({ "semester.name": 1, name: 1 });
-  return subjects.map((subject) => ({
-    semester: subject.semester.name,
-    subject: subject.name,
-    code: subject.code || "",
-    totalClasses: subject.totalClasses,
-    attendedClasses: subject.attendedClasses,
-    minimumCriteria: subject.minimumCriteria,
-    attendancePercentage: subject.computed.attendancePercentage,
-    safeMissCount: subject.computed.safeMissCount,
-    requiredClassesToRecover: subject.computed.requiredClassesToRecover,
-    warningLevel: subject.computed.warningLevel,
-  }));
+  const result = await pool.query(
+    `SELECT *
+     FROM subjects
+     WHERE user_id = $1
+     ORDER BY semester_name ASC, name ASC`,
+    [userId]
+  );
+
+  return result.rows.map((row) => {
+    const subject = mapSubject(row);
+
+    return {
+      semester: subject.semester.name,
+      subject: subject.name,
+      code: subject.code || "",
+      totalClasses: subject.totalClasses,
+      attendedClasses: subject.attendedClasses,
+      minimumCriteria: subject.minimumCriteria,
+      attendancePercentage: subject.computed.attendancePercentage,
+      safeMissCount: subject.computed.safeMissCount,
+      requiredClassesToRecover: subject.computed.requiredClassesToRecover,
+      warningLevel: subject.computed.warningLevel,
+    };
+  });
 }
 
 const exportCsv = asyncHandler(async (req, res) => {
-  const rows = await getExportRows(req.user._id);
+  const rows = await getExportRows(req.user.id);
   const csv = stringify(rows, { header: true });
 
   res.setHeader("Content-Type", "text/csv");
@@ -29,7 +41,7 @@ const exportCsv = asyncHandler(async (req, res) => {
 });
 
 const exportPdf = asyncHandler(async (req, res) => {
-  const rows = await getExportRows(req.user._id);
+  const rows = await getExportRows(req.user.id);
   const doc = new PDFDocument({ margin: 40 });
 
   res.setHeader("Content-Type", "application/pdf");

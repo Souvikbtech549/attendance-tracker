@@ -1,6 +1,6 @@
 require("dotenv").config();
 
-const required = ["MONGODB_URI", "JWT_SECRET"];
+const required = ["DATABASE_URL", "JWT_SECRET"];
 
 for (const key of required) {
   if (!process.env[key]) {
@@ -10,7 +10,7 @@ for (const key of required) {
 
 const env = {
   port: process.env.PORT || 5000,
-  mongoUri: process.env.MONGODB_URI || "mongodb://127.0.0.1:27017/attendance_tracker",
+  databaseUrl: process.env.DATABASE_URL || "postgresql://postgres:postgres@127.0.0.1:5432/attendance_tracker",
   jwtSecret: process.env.JWT_SECRET || "dev-only-secret",
   clientUrl: process.env.CLIENT_URL || "http://localhost:5173",
 };
